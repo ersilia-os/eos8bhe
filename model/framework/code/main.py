@@ -1,12 +1,18 @@
-# imports
+# import libraries
 import os
-import csv
 import sys
-# from rdkit import Chem
-# from rdkit.Chem.Descriptors import MolWt
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 import safe as sf
 import datamol as dm
+from safe.utils import compute_side_chains
+import csv
+from rdkit import Chem
+from rdkit import Chem, rdBase
+from rdkit.Chem import Draw
+from rdkit.Chem.Scaffolds import rdScaffoldNetwork
+from rdkit.Chem import Descriptors
+import matplotlib as mpl
+from rdkit import Chem
 
 # parse arguments
 input_file = sys.argv[1]
@@ -29,19 +35,41 @@ def smiles_to_safe(smiles):
     try:
         safe = sf.encode(smiles)
         return safe
-    except sf.EncoderError:
+    # except sf.EncoderError:
+    except:
         print("Error in SMILES conversion")
 
 
-#  convert core structure to side chain
-def side_chains(core_structure):
-    return core_structure
+def extract_core_structure(SMILES):
+    # Define scaffold parameter network
+    params = rdScaffoldNetwork.ScaffoldNetworkParams()
+    # customize parameter attributes
+    params.includeScaffoldsWithoutAttachments=False
+    mol = Chem.MolFromSmiles(SMILES)
+    net = rdScaffoldNetwork.CreateScaffoldNetwork([mol],params)
+    nodemols = [Chem.MolFromSmiles(x) for x in net.nodes]
+
+    filtered_list = []
+    for mol in nodemols:
+        # Check for the presence of attachment points and molecular weight range
+        if "*" in Chem.MolToSmiles(mol) and 60 < Descriptors.MolWt(mol) < 100:
+            filtered_list.append(mol)
+    
+    # If there are no scaffolds within the range, select the closest one
+    if not filtered_list:
+        closest_mol = min(nodemols, key=lambda x: abs(Descriptors.MolWt(x) - 80))
+        filtered_list.append(closest_mol)
+    
+    # Sort the filtered list based on the number of heteroatoms (fewer carbons)
+    filtered_list.sort(key=lambda x: x.GetNumHeavyAtoms())
+
+    return filtered_list
 
 
 # generate new smiles
-def generate_smiles(side_chains):
+def generate_smiles(side_chain):
     generated_smiles = designer.scaffold_morphing(
-        side_chains=side_chains,
+        side_chains=side_chain,
         n_samples_per_trial=12,
         n_trials=1,
         sanitize=True,
@@ -50,12 +78,24 @@ def generate_smiles(side_chains):
     return generated_smiles
 
 # my model
-def my_model(side_chains_list):
-    return [generate_smiles(side_chains) for side_chains in side_chains_list]
+def my_model(SMILES):
+    generated_smiles = []
+    for i in SMILES:
+        # extract the core structures for each SMILES
+        core_structures = extract_core_structure(i)
+        # generate new molecules for each side chain of the smile
+        for core in core_structures:
+            # compute side chain
+            side_chain = compute_side_chains(core=core, mol=i)
+            # generate new molecules for each side chain of the smile
+            output = generate_smiles(side_chain)
+            generated_smiles += output
+
+    return generated_smiles 
 
 
 # read SMILES from .csv file, assuming one column with header
-with open(input_file, "r") as f:
+with open("data/my_molecules.csv", "r") as f:
     reader = csv.reader(f)
     next(reader)  # skip header
     smiles_list = [r[0] for r in reader]
@@ -64,19 +104,18 @@ with open(input_file, "r") as f:
 designer = sf.SAFEDesign.load_default(verbose=True)
 designer.model
 
-# convert to SAFE
+# # convert to SAFE
 safe_list = [smiles_to_safe(smi) for smi in smiles_list]
 
-# convert molecule to side chains
-side_chains_list = [side_chains(sf) for sf in safe_list]
-
 # run model
-outputs = my_model(smiles_list)
+outputs = my_model(safe_list)
+# remove duplicate smiles
+outputs = list(set(outputs))
 
-#check input and output have the same lenght
-input_len = len(smiles_list)
-output_len = len(outputs)
-assert input_len == output_len
+# #check input and output have the same lenght
+# input_len = len(smiles_list)
+# output_len = len(outputs)
+# assert input_len == output_len
 
 # write output in a .csv file
 with open(output_file, "w") as f:
