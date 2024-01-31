@@ -3,7 +3,7 @@ import os
 import sys
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 import safe as sf
-import datamol as dm
+# import datamol as dm
 from safe.utils import compute_side_chains
 import csv
 from rdkit import Chem
@@ -11,7 +11,7 @@ from rdkit import Chem, rdBase
 from rdkit.Chem import Draw
 from rdkit.Chem.Scaffolds import rdScaffoldNetwork
 from rdkit.Chem import Descriptors
-import matplotlib as mpl
+# import matplotlib as mpl
 from rdkit import Chem
 
 # parse arguments
@@ -20,7 +20,6 @@ output_file = sys.argv[2]
 
 # current file directory
 # root = os.path.dirname(os.path.abspath(__file__))
-
 
 # read input csv file
 # load pretrained
@@ -77,10 +76,31 @@ def generate_smiles(side_chain):
         random_seed=100,)
     return generated_smiles
 
+
+def get_side_chain_pairs(side_chains):
+    '''Function to break the side chains into pairs'''
+    side_chains_pairs = []
+    side_chains_smiles = Chem.MolToSmiles(side_chains).split(".")
+    n = len(side_chains_smiles)
+
+    for i in range(n):
+        for j in range(i+1, n):
+            # Clip off the first four characters for consistent numbering
+            adjusted_side_chain_i = side_chains_smiles[i][4:]
+            adjusted_side_chain_j = side_chains_smiles[j][4:]
+
+            # Use [1*] and .[2*] consistently
+            new_pair = f"[1*]{adjusted_side_chain_i}.[2*]{adjusted_side_chain_j}"
+            side_chains_pairs.append(Chem.MolFromSmiles(new_pair))
+
+    return side_chains_pairs
+
+
 # my model
 def my_model(SMILES):
     generated_smiles = []
     for i in SMILES:
+        row = []
         # extract the core structures for each SMILES
         core_structures = extract_core_structure(i)
         # generate new molecules for each side chain of the smile
@@ -89,7 +109,8 @@ def my_model(SMILES):
             side_chain = compute_side_chains(core=core, mol=i)
             # generate new molecules for each side chain of the smile
             output = generate_smiles(side_chain)
-            generated_smiles += output
+            row += output
+        generated_smiles += [row]
 
     return generated_smiles 
 
