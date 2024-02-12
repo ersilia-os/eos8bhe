@@ -2,7 +2,7 @@ import mol_gen
 import sys
 import csv
 
-# parse arguments
+# # parse arguments
 input_file = sys.argv[1]
 output_file = sys.argv[2]
 # input_file = "data/my_molecules (copy).csv"
