@@ -93,12 +93,12 @@ class MoleculeModel:
         generated_smiles = []
         for i in safe:
             row = []
-            core_structures = self.extract_core_structure(i)
+            core_structures = self._extract_core_structure(i)
             for core in core_structures:
                 side_chain = compute_side_chains(core=core, mol=i)
-                side_chain_pairs = self.get_side_chain_pairs(side_chain)
+                side_chain_pairs = self._get_side_chain_pairs(side_chain)
                 for side_chain in side_chain_pairs:
-                    output = self.generate_smiles(side_chain)
+                    output = self._generate_smiles(side_chain)
                     row += output
             generated_smiles += [row]
         return generated_smiles
