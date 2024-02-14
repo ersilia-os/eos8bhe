@@ -5,9 +5,6 @@ import csv
 # # parse arguments
 input_file = sys.argv[1]
 output_file = sys.argv[2]
-# input_file = "data/my_molecules (copy).csv"
-# output_file = "data/results.csv"
-
 
 designer = mol_gen.MoleculeModel()
 
@@ -22,7 +19,6 @@ safe_list = [designer.smiles_to_safe(smi) for smi in smiles_list]
 
 # run model
 outputs = designer.run_model(safe_list)
-# print(outputs)  # remove later
 
 #check input and output have the same lenght
 input_len = len(smiles_list)
@@ -35,5 +31,3 @@ with open(output_file, "w") as f:
     writer.writerow(["value"])  # header
     for o in outputs:
         writer.writerow([o])
-
-

@@ -11,7 +11,7 @@
     "Output": ["Compound"],
     "Output Type": ["String"],
     "Output Shape": "List",
-    "Interpretation": "New molecules generated from input molecule by replacing core structure of input molecule.",
+    "Interpretation": "Model generates new molecules from input molecule by replacing core structures of input molecule.",
     "Tag": "Compound Generation",
     "Publication": "https://arxiv.org/pdf/2310.10773.pdf",
     "Source Code": "https://github.com/datamol-io/safe/tree/main",

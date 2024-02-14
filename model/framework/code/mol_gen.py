@@ -2,7 +2,7 @@
 import os
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 import safe as sf
-import datamol as dm
+# import datamol as dm
 from safe.utils import compute_side_chains
 from rdkit import Chem
 from rdkit.Chem.Scaffolds import rdScaffoldNetwork
