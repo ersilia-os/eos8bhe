@@ -1,4 +1,4 @@
-FROM bentoml/model-server:0.11.0-py310
+FROM bentoml/model-server:0.11.0-py39
 MAINTAINER ersilia
 
 
