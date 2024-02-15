@@ -12,7 +12,7 @@ RUN pip install tokenizers==0.15.0
 RUN pip install transformers==4.36.2
 RUN pip install typer==0.9.0
 RUN pip install universal-pathlib==0.1.4
-RUN pip install wandb==0.16.1
+RUN pip install wandb==0.10.0
 RUN pip install rdkit==2023.9.3
 RUN pip install --no-deps safe-mol==0.1.4
 
