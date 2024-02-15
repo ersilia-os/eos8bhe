@@ -24,32 +24,36 @@ class MoleculeModel:
             return sf.encode(smiles)
         except Exception as e:
             print(f" Error in SMILES conversion: {e}")
+            return None
 
     def _extract_core_structure(self, safe):
         # Define scaffold parameter network
         params = rdScaffoldNetwork.ScaffoldNetworkParams()
         # customize parameter attributes
         params.includeScaffoldsWithoutAttachments=False
-        mol = Chem.MolFromSmiles(safe)
-        net = rdScaffoldNetwork.CreateScaffoldNetwork([mol],params)
-        nodemols = [Chem.MolFromSmiles(x) for x in net.nodes]
+        if safe is not None:
+            mol = Chem.MolFromSmiles(safe)
+            net = rdScaffoldNetwork.CreateScaffoldNetwork([mol],params)
+            nodemols = [Chem.MolFromSmiles(x) for x in net.nodes]
 
-        filtered_list = []
-        for mol in nodemols:
-            # Check for the presence of attachment points and molecular weight range
-            if "*" in Chem.MolToSmiles(mol) and self.lower_molecular_weight < Descriptors.MolWt(mol) < self.upper_molecular_weight:
-                filtered_list.append(mol)
-        
-        # If there are no scaffolds within the range, select the closest one
-        if not filtered_list:
-            closest_mol = min(nodemols, key=lambda x: abs(Descriptors.MolWt(x) - (self.lower_molecular_weight + self.upper_molecular_weight) / 2))
-            filtered_list.append(closest_mol)
-        
-        # Sort the filtered list based on the number of heteroatoms (fewer carbons)
-        filtered_list.sort(key=lambda x: x.GetNumHeavyAtoms())
+            filtered_list = []
+            for mol in nodemols:
+                # Check for the presence of attachment points and molecular weight range
+                if "*" in Chem.MolToSmiles(mol) and self.lower_molecular_weight < Descriptors.MolWt(mol) < self.upper_molecular_weight:
+                    filtered_list.append(mol)
+            
+            # If there are no scaffolds within the range, select the closest one
+            if not filtered_list:
+                closest_mol = min(nodemols, key=lambda x: abs(Descriptors.MolWt(x) - (self.lower_molecular_weight + self.upper_molecular_weight) / 2))
+                filtered_list.append(closest_mol)
+            
+            # Sort the filtered list based on the number of heteroatoms (fewer carbons)
+            filtered_list.sort(key=lambda x: x.GetNumHeavyAtoms())
 
-        return filtered_list
-    
+            return filtered_list
+        else:
+            return None
+        
     
     def _generate_smiles(self, side_chains):
         generated_smiles = self.designer.scaffold_morphing(
@@ -93,13 +97,15 @@ class MoleculeModel:
         generated_smiles = []
         for i in safe:
             row = []
-            core_structures = self._extract_core_structure(i)
-            for core in core_structures:
-                side_chain = compute_side_chains(core=core, mol=i)
-                side_chain_pairs = self._get_side_chain_pairs(side_chain)
-                for side_chain in side_chain_pairs:
-                    output = self._generate_smiles(side_chain)
-                    row += output
-            generated_smiles += [row]
+            if i is not None:
+                core_structures = self._extract_core_structure(i)
+                for core in core_structures:
+                    side_chain = compute_side_chains(core=core, mol=i)
+                    side_chain_pairs = self._get_side_chain_pairs(side_chain)
+                    for side_chain in side_chain_pairs:
+                        output = self._generate_smiles(side_chain)
+                        row += output
+                generated_smiles += [row]
+            else:
+                generated_smiles += [row]
         return generated_smiles
-
