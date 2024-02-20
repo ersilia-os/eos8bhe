@@ -1,19 +1,30 @@
 {
     "Identifier": "eos8bhe",
-    "Slug": "datamol-io-safe",
+    "Slug": "scaffold-morphing",
     "Status": "In progress",
-    "Title": "safe",
+    "Title": "Scaffold Morphing",
     "Description": "The context discusses a novel notation system called Sequential Attachment-based Fragment Embedding (SAFE) that improves upon traditional molecular string representations like SMILES. SAFE reframes SMILES strings as an unordered sequence of interconnected fragment blocks while maintaining compatibility with existing SMILES parsers. This streamlines complex molecular design tasks by facilitating autoregressive generation under various constraints. The effectiveness of SAFE is demonstrated by training a GPT2-like model on a dataset of 1.1 billion SAFE representations that exhibited versatile and robust optimization performance for molecular design.",
-    "Mode": "",
-    "Task": [],
-    "Input": [],
-    "Input Shape": "",
-    "Output": [],
-    "Output Type": [],
-    "Output Shape": "",
-    "Interpretation": "",
-    "Tag": "Compound Generation",
+    "Mode": "Pretrained",
+    "Task": [
+        "Generative"
+    ],
+    "Input": [
+        "Compound"
+    ],
+    "Input Shape": "Single",
+    "Output": [
+        "Compound"
+    ],
+    "Output Type": [
+        "String"
+    ],
+    "Output Shape": "List",
+    "Interpretation": "Model generates new molecules from input molecule by replacing core structures of input molecule.",
+    "Tag": [
+        "Compound generation"
+    ],
     "Publication": "https://arxiv.org/pdf/2310.10773.pdf",
     "Source Code": "https://github.com/datamol-io/safe/tree/main",
-    "License": "CC BY 4.0"
+    "License": "CC",
+    "S3": "https://ersilia-models-zipped.s3.eu-central-1.amazonaws.com/eos8bhe.zip"
 }

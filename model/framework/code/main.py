@@ -1,21 +1,12 @@
-# imports
-import os
-import csv
+import mol_gen
 import sys
-from rdkit import Chem
-from rdkit.Chem.Descriptors import MolWt
+import csv
 
-# parse arguments
+# # parse arguments
 input_file = sys.argv[1]
 output_file = sys.argv[2]
 
-# current file directory
-root = os.path.dirname(os.path.abspath(__file__))
-
-# my model
-def my_model(smiles_list):
-    return [MolWt(Chem.MolFromSmiles(smi)) for smi in smiles_list]
-
+designer = mol_gen.MoleculeModel()
 
 # read SMILES from .csv file, assuming one column with header
 with open(input_file, "r") as f:
@@ -23,8 +14,11 @@ with open(input_file, "r") as f:
     next(reader)  # skip header
     smiles_list = [r[0] for r in reader]
 
+# Convert to SAFE
+safe_list = [designer.smiles_to_safe(smi) for smi in smiles_list]
+
 # run model
-outputs = my_model(smiles_list)
+outputs = designer.run_model(safe_list)
 
 #check input and output have the same lenght
 input_len = len(smiles_list)
