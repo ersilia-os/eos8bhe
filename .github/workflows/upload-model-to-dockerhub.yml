@@ -36,6 +36,13 @@ jobs:
           fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
           lfs: 'true'
           
+      - name: Clean Disk Space
+        run: |
+          df -h
+          sudo swapoff -a
+          sudo rm -rf /swapfile /usr/share/dotnet /usr/local/lib/android /opt/ghc
+          df -h
+      
       - name: Generate the Dockerfile
         id: generate-dockerfile
         env:

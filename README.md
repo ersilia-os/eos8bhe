@@ -26,6 +26,7 @@ The context discusses a novel notation system called Sequential Attachment-based
 ## Ersilia model URLs
 * [GitHub](https://github.com/ersilia-os/eos8bhe)
 * [AWS S3](https://ersilia-models-zipped.s3.eu-central-1.amazonaws.com/eos8bhe.zip)
+* [DockerHub](https://hub.docker.com/r/ersiliaos/eos8bhe) (AMD64)
 
 ## Citation
 
