@@ -12,7 +12,7 @@ from itertools import combinations
 
 
 class MoleculeModel:
-    def __init__(self, n_trials=10, n_samples_per_trial=10, lower_molecular_weight=60, upper_molecular_weight=100):
+    def __init__(self, n_trials=10, n_samples_per_trial=100, lower_molecular_weight=60, upper_molecular_weight=100):
         self.designer = sf.SAFEDesign.load_default(verbose=True)
         self.n_trials = n_trials
         self.n_samples_per_trial = n_samples_per_trial

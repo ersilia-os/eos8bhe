@@ -25,14 +25,14 @@ input_len = len(smiles_list)
 output_len = len(outputs)
 assert input_len == output_len
 
-# write output in a .csv file
 N_COLS = 1000
-with open(output_file, "w") as f:
-    writer = csv.writer(f)
-    h = ["smi_{}".format(i) for i in range(N_COLS)]
-    writer.writerow(h)
+HEADER = [f"smi_{x}" for x in range(N_COLS)]
+
+with open(output_file, "w", newline="") as fp:
+    csv_writer = csv.writer(fp)
+    # First Row: Header
+    # Second Row onwards: Generated Smiles (Output)
+    csv_writer.writerows([HEADER])
     for o in outputs:
-        o = o[:N_COLS]
-        if len(o) < N_COLS:
-            o = o + [None] * (N_COLS - len(o))
-        writer.writerow(o)
+        print(len(o))
+        csv_writer.writerow(o)
