@@ -3,21 +3,18 @@
     "Slug": "scaffold-morphing",
     "Status": "In maintenance",
     "Title": "Scaffold morphing",
-    "Description": "The context discusses a novel notation system called Sequential Attachment-based Fragment Embedding (SAFE) that improves upon traditional molecular string representations like SMILES. SAFE reframes SMILES strings as an unordered sequence of interconnected fragment blocks while maintaining compatibility with existing SMILES parsers. This streamlines complex molecular design tasks by facilitating autoregressive generation under various constraints. The effectiveness of SAFE is demonstrated by training a GPT2-like model on a dataset of 1.1 billion SAFE representations that exhibited versatile and robust optimization performance for molecular design.\n",
+    "Description": "The context discusses a novel notation system called Sequential Attachment-based Fragment Embedding (SAFE) that improves upon traditional molecular string representations like SMILES. SAFE reframes SMILES strings as an unordered sequence of interconnected fragment blocks while maintaining compatibility with existing SMILES parsers. This streamlines complex molecular design tasks by facilitating autoregressive generation under various constraints. The effectiveness of SAFE is demonstrated by training a GPT2-like model on a dataset of 1.1 billion SAFE representations that exhibited versatile and robust optimization performance for molecular design.",
+    "Deployment": [
+        "Local"
+    ],
     "Source": "Local",
     "Source Type": "External",
+    "Task": "Sampling",
+    "Subtask": "Generation",
     "Input": [
         "Compound"
     ],
     "Input Dimension": 1,
-    "Task": "Sampling",
-    "Subtask": "Generation",
-    "Biomedical Area": [
-        "Any"
-    ],
-    "Target Organism": [
-        "Any"
-    ],
     "Output": [
         "Compound"
     ],
@@ -27,19 +24,22 @@
     "Tag": [
         "Compound generation"
     ],
-    "Publication": "https://arxiv.org/pdf/2310.10773.pdf",
+    "Biomedical Area": [
+        "Any"
+    ],
+    "Target Organism": [
+        "Any"
+    ],
     "Publication Type": "Preprint",
     "Publication Year": 2023,
+    "Publication": "https://arxiv.org/pdf/2310.10773.pdf",
     "Source Code": "https://github.com/datamol-io/safe/tree/main",
     "License": "Apache-2.0",
     "Contributor": "Inyrkz",
     "Incorporation Date": "2024-01-12",
+    "S3": "https://ersilia-models-zipped.s3.eu-central-1.amazonaws.com/eos8bhe.zip",
     "DockerHub": "https://hub.docker.com/r/ersiliaos/eos8bhe",
     "Docker Architecture": [
         "AMD64"
-    ],
-    "S3": "https://ersilia-models-zipped.s3.eu-central-1.amazonaws.com/eos8bhe.zip",
-    "Deployment": [
-        "Local"
     ]
 }
